@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Use correct character set. -->
+    <meta charset="utf-8" />
+    <!-- Tell IE to use the latest, best version. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <title>Construkted XR Demo</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cesiumjs.org/releases/1.66/Build/Cesium/Widgets/widgets.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cesiumjs.org/Cesium/Build/Apps/Sandcastle/templates/bucket.css"
+    />
+
+    <script src="https://cesiumjs.org/releases/1.66/Build/Cesium/Cesium.js"></script>
+    <!--    <script src="https://cesiumjs.org/releases/1.66/Build/CesiumUnminified/Cesium.js"></script>-->
+    <script src="https://cesiumjs.org/Cesium/Build/Apps/Sandcastle/Sandcastle-helpers.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #cesiumContainer {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: none;
+        width: 100%;
+        height: 100%;
+      }
+
+      header {
+        position: relative;
+        z-index: 2;
+        left: 0;
+        text-align: left;
+        max-width: 420px;
+        padding: 0.5em;
+        background: #303336;
+        margin-bottom: 0.5em;
+        border-radius: 2px;
+        color: #edffff;
+      }
+
+      #loading {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(192, 192, 192, 1);
+        background-image: url("http://i.stack.imgur.com/MnyxU.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      #welcome {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: none;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="loading"></div>
+    <div id="welcome">
+      <h1 align="center">Welcome to Construkted XR</h1>
+    </div>
+    <div id="overlay-content">
+      <div id="cesiumContainer" class="fullSize" style="display: none;"></div>
+      <div id="toolbar" style="display: none;">
+        <header>
+          <!-- <div id="ui" class="customEventTarget">
+            <details>
+              <summary style="padding: 20px;">Viewer Pose Data</summary>
+              <strong> Position: </strong>
+              <p id="posX">x: 0</p>
+              <p id="posY">y: 0</p>
+              <p id="posZ">z: 0</p>
+              <strong> Rotation: </strong>
+              <p id="rotX">x: 0</p>
+              <p id="rotY">y: 0</p>
+              <p id="rotZ">z: 0</p>
+            </details>
+          </div> -->
+        </header>
+
+        <button
+          id="exitFPVModeButton"
+          class="cesium-button"
+          style="display: none;"
+        >
+          EXIT FPV MODE
+        </button>
+        <button
+          id="moveLeftButton"
+          class="cesium-button"
+          style="display: none;"
+        >
+          MOVE LEFT
+        </button>
+        <button
+          id="moveRightButton"
+          class="cesium-button"
+          style="display: none;"
+        >
+          MOVE RIGHT
+        </button>
+        <button
+          id="moveFrontButton"
+          class="cesium-button"
+          style="display: none;"
+        >
+          MOVE FRONT
+        </button>
+        <button
+          id="moveBackButton"
+          class="cesium-button"
+          style="display: none;"
+        >
+          MOVE BACK
+        </button>
+
+        <div id="debug-ui" style="display: none;">
+          TransX
+          <input
+            type="range"
+            min="-5"
+            max="5"
+            step="0.01"
+            data-bind="value: transX, valueUpdate: 'input'"
+          />
+          <input type="text" size="3" data-bind="value: transX" /> <br />
+          TransY<input
+            type="range"
+            min="-5"
+            max="5"
+            step="0.01"
+            data-bind="value: transY, valueUpdate: 'input'"
+          />
+          <input type="text" size="3" data-bind="value: transY" /><br />
+          TransZ<input
+            type="range"
+            min="-5"
+            max="5"
+            step="0.01"
+            data-bind="value: transZ, valueUpdate: 'input'"
+          />
+          <input type="text" size="3" data-bind="value: transZ" /><br />
+
+          RotationX<input
+            type="range"
+            min="-90"
+            max="90"
+            step="0.01"
+            data-bind="value: rotationX, valueUpdate: 'input'"
+          />
+          <input type="text" size="3" data-bind="value: rotationX" /><br />
+          RotationY<input
+            type="range"
+            min="-90"
+            max="90"
+            step="0.01"
+            data-bind="value: rotationY, valueUpdate: 'input'"
+          />
+          <input type="text" size="3" data-bind="value: rotationY" /><br />
+          RotationZ<input
+            type="range"
+            min="-90"
+            max="90"
+            step="0.01"
+            data-bind="value: rotationZ, valueUpdate: 'input'"
+          />
+          <input type="text" size="3" data-bind="value: rotationZ" />
+        </div>
+      </div>
+    </div>
+    <canvas
+      id="xr-canvas"
+      style="width: 100%; height: 0; background-color: red;"
+    ></canvas>
+
+    <script src="./cs-camera-controller.js"></script>
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

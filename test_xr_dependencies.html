@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Use correct character set. -->
+    <meta charset="utf-8" />
+    <!-- Tell IE to use the latest, best version. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <title>Construkted XR Test</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      header {
+        position: relative;
+        z-index: 2;
+        left: 0;
+        text-align: left;
+        max-width: 420px;
+        padding: 0.5em;
+        background: #303336;
+        margin-bottom: 0.5em;
+        border-radius: 2px;
+        color: #edffff;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div id="overlay-content">
+      <div id="toolbar">
+        <header>
+          <div id="ui" class="customEventTarget">
+            <details>
+              <summary style="padding: 20px;">Viewer Pose Data</summary>
+              <strong> Position: </strong>
+              <p id="posX">x: 0</p>
+              <p id="posY">y: 0</p>
+              <p id="posZ">z: 0</p>
+              <strong> Rotation: </strong>
+              <p id="rotX">x: 0</p>
+              <p id="rotY">y: 0</p>
+              <p id="rotZ">z: 0</p>
+            </details>
+          </div>
+        </header>
+      </div>
+    </div>
+
+    <canvas id="xr-canvas" style="width: 100%; height: 0; background-color: red;" ></canvas>
+    <script src="./build/construkted-xr-dependencies.js"></script>
+    <script src="./test.js"></script>
+  </body>
+</html>
